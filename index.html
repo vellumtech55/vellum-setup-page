@@ -103,23 +103,46 @@
     </p>
 </section>
 
-<!-- LINUX -->
-<section id="products" class="tab-content neon-theme">
-    <h2>Poducts</h2>
-    <select name="select a product" id="select a product">
-      <option></option>
-      <optgroup label="select a type of product"> 
-       <option value="utility">Utility Software</option>
-       <option value="gaming">Gaming Software</option>
+    <section id="products" class="tab-content neon-theme">
 
-        
-      </optgroup>
-      
-      </option>
+    <h2>Products</h2>
+
+    <select id="actionSelector" onchange="toggleButtons()">
+
+        <option value="">Select a product type</option>
+
+        <optgroup label="Software Type">
+
+            <option value="utility">
+                Utility Software
+            </option>
+
+            <option value="gaming">
+                Gaming Software
+            </option>
+
+        </optgroup>
+
     </select>
-<button istyle=background-color:#222;display:none;></button>
 
-</section>  
+    <br><br>
+
+    <div id="buttonArea"></div>
+    <div id="TextArea"></div>
+      
+
+</section>
+
+<button id="editBtn" style="display:none; background:#222; color:white;">
+    Timer
+</button>
+
+<button id="deleteBtn" style="display:none; background:#222; color:white;">
+    Gaming Button
+</button>
+<button hidden style=background-color:#222;  ></button>
+
+ 
 <footer>
     <p>&copy; 2026 Vellum Studio. All rights reserved.</p>
 </footer>
@@ -140,21 +163,67 @@ tabButtons.forEach(button => {
     });
 });
 
-  function toggleButtons() {
-const selection = document.getElementById("actionSelector").value;
-const editBtn = document.getElementById("editBtn");
-const deleteBtn = document.getElementById("deleteBtn");
-    
-  // Reset visibility
-  editBtn.style.display = "none";
-  deleteBtn.style.display = "none";
+function toggleButtons() {
 
-  // Show button based on selection
-  if (selection === "edit") {
-    editBtn.style.display = "inline-block";
-  } else if (selection === "delete") {
-    deleteBtn.style.display = "inline-block";
-  }
+    const selection =
+        document.getElementById("actionSelector").value;
+
+    const buttonArea =
+        document.getElementById("buttonArea");
+
+    buttonArea.innerHTML = "";
+
+    // UTILITY SOFTWARE
+    if (selection === "utility") {
+
+        buttonArea.innerHTML = `
+
+            <button onclick="showText('Timer requires Windows 10/11 and python installed.')">
+                Timer
+            </button>
+
+            <button onclick="showText('Screen Recorder requires python,mss,opencv,')">
+                Screen Recorder
+            </button>
+
+            <button onclick="showText('Documentation explains installation and setup.')">
+                View Docs
+            </button>
+
+        `;
+
+    }
+
+    // GAMING SOFTWARE
+    else if (selection === "gaming") {
+
+        buttonArea.innerHTML = `
+
+            <button onclick="showText('Match Visualization requires ollama from the officiial site with mistral and  ')">
+                Match review
+            </button>
+
+
+        `;
+
+    }
+
+}
+  function showText(message) {
+
+    document.getElementById("TextArea").innerHTML = `
+        <div style="
+            margin-top:20px;
+            padding:16px;
+            background:#1a1a1a;
+            border:1px solid #333;
+            border-radius:12px;
+            color:white;
+        ">
+            ${message}
+        </div>
+    `;
+
 }
 </script>
 
