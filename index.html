@@ -156,19 +156,22 @@ function toggleButtons() {
 
     if (selection === "utility") {
         buttonArea.innerHTML = `
-            <button onclick="showText('Timer requires Windows 10/11 and Python installed.')">
+            <button onclick="showText('Timer requires Windows 10/11 and Python installed and.')">
                 Timer
             </button>
 
             <button onclick="showText('Screen recorder requires Python 3.8+, opencv-python, numpy, and mss installed. DOES NOT WORK ON WAYLAND IF USING LINUX.')">
                 Screen Recorder
             </button>
+            <button onclick="showText('python')">
+                Work Tracker
+            </button>
         `;
     }
 
     else if (selection === "gaming") {
         buttonArea.innerHTML = `
-            <button onclick="showText('Match review requires Ollama with Mistral and qwen2.5 model installed.')">
+            <button onclick="showText('Match review requires Ollama with Mistral and qwen2.5 model installed and python.')">
                 Vellum Game Visualization
             </button>
         `;
