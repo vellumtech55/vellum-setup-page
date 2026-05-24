@@ -3,17 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> Vellum Setup Page</title>
+<title>Vellum Setup Page</title>
 
 <style>
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-
-        /* 🌌 GLOBAL NEON BACKGROUND (ALL NON-GAMING TABS) */
         background: #111;
         color: white;
+
+        /* 🔥 makes footer stick to bottom */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 
     header {
@@ -21,19 +24,16 @@
         color: white;
         text-align: center;
         padding: 0.6rem;
-        font-family:m;
     }
 
-    /* NAV */
     nav {
         display: flex;
-        background-color: #111;
+        background-color: #000;
         border-bottom: 2px solid #222;
     }
 
     nav button {
         flex: 1;
-        padding: 10px;
         cursor: pointer;
         border: none;
         background-color: #000;
@@ -44,20 +44,19 @@
 
     nav button:hover {
         background-color: #222;
-        
     }
-    
+
     nav button.active {
         background-color: #222;
         border-bottom: 2px solid #900;
     }
 
-    /* TAB SYSTEM */
     .tab-content {
         display: none;
         padding: 2rem;
         max-width: 900px;
         margin: auto;
+        flex: 1;
         animation: fadeIn 0.3s ease-in;
     }
 
@@ -75,11 +74,16 @@
         color: #aaa;
         text-align: center;
         padding: 1rem;
-        height:600px;
-        
     }
 
-  
+    button {
+        margin: 5px;
+        padding: 10px;
+        background: #222;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
 </style>
 </head>
 
@@ -91,58 +95,39 @@
 
 <nav>
     <button class="tab-button active" data-tab="about">Page Information</button>
-    <button class="tab-button" data-tab="products">products</button>
+    <button class="tab-button" data-tab="products">Products</button>
 </nav>
 
-<!-- ABOUT (FULL NEON BACKGROUND) -->
-<section id="about" class="tab-content active neon-theme">
+<!-- ABOUT -->
+<section id="about" class="tab-content active">
     <h2>Page Information</h2>
-    <p>This page is made to show what is REQUIRED for the products of Vellum Studio to run, preferably BEFORE PURCHASE.
-    If there are any questions about products, requirements, prices, legal information, etc. 
-    Go to the main Vellum studio page. THANK YOU for visiting our pages.
+    <p>
+        This page is made to show what is REQUIRED for the products of Vellum Studio to run before purchase.
+        For questions about products, requirements, prices, or legal info go to the main Vellum Studio page.
     </p>
 </section>
 
-    <section id="products" class="tab-content neon-theme">
+<!-- PRODUCTS -->
+<section id="products" class="tab-content">
 
     <h2>Products</h2>
 
     <select id="actionSelector" onchange="toggleButtons()">
-
         <option value="">Select a product type</option>
 
         <optgroup label="Software Type">
-
-            <option value="utility">
-                Utility Software
-            </option>
-
-            <option value="gaming">
-                Gaming Software
-            </option>
-
+            <option value="utility">Utility Software</option>
+            <option value="gaming">Gaming Software</option>
         </optgroup>
-
     </select>
 
     <br><br>
 
     <div id="buttonArea"></div>
     <div id="TextArea"></div>
-      
 
 </section>
 
-<button id="editBtn" style="display:none; background:#222; color:white;">
-    Timer
-</button>
-
-<button id="deleteBtn" style="display:none; background:#222; color:white;">
-    Gaming Button
-</button>
-<button hidden style=background-color:#222;  ></button>
-
- 
 <footer>
     <p>&copy; 2026 Vellum Studio. All rights reserved.</p>
 </footer>
@@ -164,53 +149,33 @@ tabButtons.forEach(button => {
 });
 
 function toggleButtons() {
-
-    const selection =
-        document.getElementById("actionSelector").value;
-
-    const buttonArea =
-        document.getElementById("buttonArea");
+    const selection = document.getElementById("actionSelector").value;
+    const buttonArea = document.getElementById("buttonArea");
 
     buttonArea.innerHTML = "";
 
-    // UTILITY SOFTWARE
     if (selection === "utility") {
-
         buttonArea.innerHTML = `
-
-            <button onclick="showText('Timer requires Windows 10/11 and python installed.')">
+            <button onclick="showText('Timer requires Windows 10/11 and Python installed.')">
                 Timer
             </button>
 
-            <button onclick="showText('Screen Recorder requires python,mss,opencv,')">
+            <button onclick="showText('Screen recorder requires Python 3.8+, opencv-python, numpy, and mss installed. DOES NOT WORK ON WAYLAND IF USING LINUX.')">
                 Screen Recorder
             </button>
-
-            <button onclick="showText('Documentation explains installation and setup.')">
-                View Docs
-            </button>
-
         `;
-
     }
 
-    // GAMING SOFTWARE
     else if (selection === "gaming") {
-
         buttonArea.innerHTML = `
-
-            <button onclick="showText('Match Visualization requires ollama from the officiial site with mistral and  ')">
-                Match review
+            <button onclick="showText('Match review requires Ollama with Mistral and qwen2.5 model installed.')">
+                Vellum Game Visualization
             </button>
-
-
         `;
-
     }
-
 }
-  function showText(message) {
 
+function showText(message) {
     document.getElementById("TextArea").innerHTML = `
         <div style="
             margin-top:20px;
@@ -223,7 +188,6 @@ function toggleButtons() {
             ${message}
         </div>
     `;
-
 }
 </script>
 
