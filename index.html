@@ -3,470 +3,342 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Vellum Setup Page</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+:root{
+  --blue:#00aaff;
+  --red:#ff4040;
+  --blue-dim:rgba(0,170,255,.35);
+  --red-dim:rgba(255,64,64,.35);
 }
 
 body{
-    font-family:'Inter',sans-serif;
-    background:#111;
-    color:white;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
+  font-family:Inter,sans-serif;
+  background:#070707;
+  color:white;
+  min-height:100vh;
+  overflow-x:hidden;
 }
 
-/* ========================= */
-/* HEADER */
-/* ========================= */
+/* ── BACKGROUND ── */
+.bg-glow{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+}
 
+.bg-glow::before{
+  content:"";
+  position:absolute;
+  width:900px;
+  height:900px;
+  border-radius:50%;
+  filter:blur(160px);
+  background:rgba(0,140,255,.18);
+  animation:float 16s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%  {transform:translate(-10%,-10%) scale(1)}
+  50% {transform:translate(35%,20%) scale(1.25)}
+  100%{transform:translate(-10%,-10%) scale(1)}
+}
+
+.grid-bg{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  opacity:.07;
+  background-image:
+    linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+  background-size:45px 45px;
+}
+
+.grain{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat:repeat;
+  background-size:180px 180px;
+}
+
+/* ── HEADER ── */
 header{
-    background:linear-gradient(to bottom,#000,#111);
-    padding:40px 20px;
-    text-align:center;
-    border-bottom:1px solid #222;
+  text-align:center;
+  padding:100px 20px 50px;
 }
 
 header h1{
-    font-size:3rem;
-    font-weight:800;
-    letter-spacing:2px;
+  font-size:3.5rem;
+  font-weight:800;
+  letter-spacing:3px;
 }
 
 header p{
-    margin-top:12px;
-    color:#777;
+  color:#aaa;
+  margin-top:12px;
+  font-size:.95rem;
 }
 
-/* ========================= */
-/* NAVIGATION */
-/* ========================= */
-
+/* ── NAV ── */
 nav{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    padding:20px;
-    flex-wrap:wrap;
-    border-bottom:1px solid #222;
-    background:#111;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:18px 20px;
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(14px);
+  background:rgba(0,0,0,.5);
+  z-index:10;
+  border-bottom:1px solid rgba(255,255,255,.05);
 }
 
 .tab-button{
-    background:#000;
-    color:white;
-    border:1px solid #222;
-    padding:12px 22px;
-    border-radius:12px;
-    cursor:pointer;
-    transition:0.25s;
-    font-size:1rem;
-    font-weight:600;
+  padding:11px 20px;
+  border-radius:12px;
+  border:1px solid #2a2a2a;
+  background:#111;
+  color:#bbb;
+  cursor:pointer;
+  transition:.22s;
+  font-size:.92rem;
+  font-weight:600;
 }
 
 .tab-button:hover{
-    transform:translateY(-2px);
-    background:#1a1a1a;
+  transform:translateY(-2px);
+  color:white;
+  border-color:#444;
 }
 
 .tab-button.active{
-    border-color:#900;
-    box-shadow:0 0 15px rgba(255,0,0,0.2);
+  border-color:var(--blue);
+  color:var(--blue);
+  box-shadow:0 0 18px var(--blue-dim);
+  background:#0a0f18;
 }
 
-/* ========================= */
-/* TABS */
-/* ========================= */
-
+/* ── SECTIONS ── */
 .tab-content{
-    display:none;
-    width:100%;
-    max-width:1100px;
-    margin:auto;
-    padding:50px 25px;
-    flex:1;
-    animation:fadeIn .3s ease;
+  display:none;
+  max-width:1100px;
+  margin:auto;
+  padding:50px 22px 80px;
 }
 
 .tab-content.active{
-    display:block;
+  display:block;
+  animation:.3s fade ease;
 }
 
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(10px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+@keyframes fade{
+  from{opacity:0;transform:translateY(10px)}
+  to  {opacity:1;transform:translateY(0)}
 }
-
-/* ========================= */
-/* TITLES */
-/* ========================= */
 
 .section-title{
-    font-size:2rem;
-    margin-bottom:25px;
-    font-weight:800;
-    color:#f00;
-    text-shadow:0 0 10px rgba(255,0,0,0.2);
+  font-size:2rem;
+  font-weight:800;
+  margin-bottom:28px;
 }
 
-/* ========================= */
-/* CARDS */
-/* ========================= */
-
+/* ── CARDS ── */
 .card{
-    background:#161616;
-    border:1px solid #222;
-    border-radius:18px;
-    padding:28px;
-    line-height:1.7;
-    transition:0.25s;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:26px;
+  backdrop-filter:blur(10px);
+  transition:.25s;
+  line-height:1.75;
+  color:#ccc;
 }
 
 .card:hover{
-    transform:translateY(-4px);
-    border-color:#900;
-    box-shadow:0 0 20px rgba(255,0,0,0.12);
+  transform:translateY(-4px);
+  border-color:rgba(255,255,255,.18);
 }
 
-/* ========================= */
-/* SELECT */
-/* ========================= */
-
+/* ── SELECT ── */
 select{
-    width:100%;
-    max-width:400px;
-    background:#0d0d0d;
-    color:white;
-    border:1px solid #333;
-    padding:14px;
-    border-radius:12px;
-    font-size:1rem;
-    margin-top:10px;
+  width:100%;
+  max-width:420px;
+  background:#0d0d0d;
+  color:white;
+  border:1px solid #2a2a2a;
+  padding:14px 16px;
+  border-radius:12px;
+  font-size:.95rem;
+  font-family:Inter,sans-serif;
+  margin-top:14px;
+  cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
 }
 
 select:focus{
-    outline:none;
-    border-color:#900;
+  outline:none;
+  border-color:var(--blue);
+  box-shadow:0 0 14px var(--blue-dim);
 }
 
-/* ========================= */
-/* BUTTON AREA */
-/* ========================= */
-
+/* ── PRODUCT BUTTONS ── */
 #buttonArea{
-    display:flex;
-    flex-wrap:wrap;
-    gap:15px;
-    margin-top:30px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:28px;
 }
-
-/* ========================= */
-/* PRODUCT BUTTONS */
-/* ========================= */
 
 .product-btn{
-    background:#000;
-    color:white;
-    border:1px solid #900;
-    padding:14px 20px;
-    border-radius:12px;
-    cursor:pointer;
-    transition:0.25s;
-    font-size:1rem;
-    font-weight:600;
+  background:transparent;
+  color:var(--blue);
+  border:1px solid var(--blue);
+  padding:12px 18px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:.22s;
+  font-size:.9rem;
+  font-weight:600;
+  font-family:Inter,sans-serif;
 }
 
 .product-btn:hover{
-    background:#900;
-    transform:translateY(-2px);
+  background:var(--blue);
+  color:#fff;
+  transform:translateY(-2px);
 }
 
-/* ========================= */
-/* REQUIREMENTS BOX */
-/* ========================= */
-
+/* ── REQUIREMENT BOX ── */
 .requirement-box{
-    margin-top:30px;
-    padding:24px;
-    background:#161616;
-    border:1px solid #333;
-    border-radius:18px;
-    line-height:1.8;
-    animation:fadeIn .25s ease;
+  margin-top:24px;
+  padding:22px 26px;
+  background:rgba(0,170,255,.05);
+  border:1px solid rgba(0,170,255,.2);
+  border-radius:14px;
+  line-height:1.8;
+  color:#cde8ff;
+  font-size:.93rem;
+  animation:.25s fade ease;
 }
 
-/* ========================= */
-/* FOOTER */
-/* ========================= */
-
+/* ── FOOTER ── */
 footer{
-    margin-top:auto;
-    border-top:1px solid #222;
-    background:#000;
-    color:#666;
-    text-align:center;
-    padding:30px 20px;
+  text-align:center;
+  padding:36px 20px;
+  color:#555;
+  border-top:1px solid rgba(255,255,255,.05);
+  font-size:.88rem;
 }
 
-/* ========================= */
-/* MOBILE */
-/* ========================= */
-
-@media(max-width:700px){
-
-    header h1{
-        font-size:2rem;
-    }
-
-    .tab-content{
-        padding:35px 18px;
-    }
-
-    .product-btn{
-        width:100%;
-    }
-
+/* ── MOBILE ── */
+@media(max-width:680px){
+  header h1{font-size:2.3rem}
+  .tab-content{padding:36px 16px 60px}
+  .product-btn{width:100%}
 }
-
 </style>
 </head>
-
 <body>
 
+<div class="bg-glow"></div>
+<div class="grid-bg"></div>
+<div class="grain"></div>
+
 <header>
-
-    <h1>Vellum Setup Page</h1>
-
-    <p>
-        Product requirements and setup information
-        for Vellum Studio software.
-    </p>
-
+  <h1>VELLUM SETUP</h1>
+  <p>Product requirements and setup information for Vellum Studio software.</p>
 </header>
 
 <nav>
-
-    <button class="tab-button active" data-tab="about">
-        Information
-    </button>
-
-    <button class="tab-button" data-tab="products">
-        Products
-    </button>
-
+  <button class="tab-button active" data-tab="about">Information</button>
+  <button class="tab-button" data-tab="products">Products</button>
 </nav>
 
 <!-- ABOUT -->
-
 <section id="about" class="tab-content active">
-
-    <h2 class="section-title">
-        Page Information
-    </h2>
-
-    <div class="card">
-
-        <p>
-            This page exists to show the required setup,
-            dependencies, and operating system support
-            for Vellum Studio software before purchase.
-        </p>
-
-        <br>
-
-        <p>
-            For pricing, legal information, product pages,
-            or contact details, visit the main Vellum Studio website.
-        </p>
-
-    </div>
-
+  <h2 class="section-title">Page Information</h2>
+  <div class="card">
+    <p>This page exists to show the required setup, dependencies, and operating system support for Vellum Studio software before purchase.</p>
+    <br>
+    <p>For pricing, legal information, product pages, or contact details, visit the main Vellum Studio website.</p>
+  </div>
 </section>
 
 <!-- PRODUCTS -->
-
 <section id="products" class="tab-content">
+  <h2 class="section-title">Product Requirements</h2>
+  <div class="card">
+    <p>Select a software category below to view setup requirements and supported platforms.</p>
 
-    <h2 class="section-title">
-        Product Requirements
-    </h2>
+    <select id="actionSelector" onchange="toggleButtons()">
+      <option value="">Select a product type</option>
+      <optgroup label="Software Categories">
+        <option value="utility">Utility Software</option>
+        <option value="gaming">Gaming Software</option>
+      </optgroup>
+    </select>
 
-    <div class="card">
-
-        <p>
-            Select a software category below to view
-            setup requirements and supported platforms.
-        </p>
-
-        <br>
-
-        <select id="actionSelector" onchange="toggleButtons()">
-
-            <option value="">
-                Select a product type
-            </option>
-
-            <optgroup label="Software Categories">
-
-                <option value="utility">
-                    Utility Software
-                </option>
-
-                <option value="gaming">
-                    Gaming Software
-                </option>
-
-            </optgroup>
-
-        </select>
-
-        <div id="buttonArea"></div>
-
-        <div id="TextArea"></div>
-
-    </div>
-
+    <div id="buttonArea"></div>
+    <div id="TextArea"></div>
+  </div>
 </section>
 
 <footer>
-    <p>© 2026 Vellum Studio — All Rights Reserved</p>
+  <p>© 2026 Vellum Studio — All Rights Reserved</p>
 </footer>
 
 <script>
-
-/* ========================= */
 /* TAB SYSTEM */
-/* ========================= */
-
-const tabButtons = document.querySelectorAll('.tab-button');
+const tabButtons  = document.querySelectorAll('.tab-button');
 const tabContents = document.querySelectorAll('.tab-content');
 
-tabButtons.forEach(button => {
-
-    button.addEventListener('click', () => {
-
-        const tab = button.dataset.tab;
-
-        tabButtons.forEach(btn =>
-            btn.classList.remove('active')
-        );
-
-        tabContents.forEach(content =>
-            content.classList.remove('active')
-        );
-
-        button.classList.add('active');
-
-        document
-            .getElementById(tab)
-            .classList.add('active');
-
-    });
-
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabButtons.forEach(b => b.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
 });
 
-/* ========================= */
 /* PRODUCT SWITCHER */
-/* ========================= */
-
 function toggleButtons(){
+  const selection  = document.getElementById("actionSelector").value;
+  const buttonArea = document.getElementById("buttonArea");
+  document.getElementById("TextArea").innerHTML = "";
+  buttonArea.innerHTML = "";
 
-    const selection =
-        document.getElementById("actionSelector").value;
-
-    const buttonArea =
-        document.getElementById("buttonArea");
-
-    buttonArea.innerHTML = "";
-
-    if(selection === "utility"){
-
-        buttonArea.innerHTML = `
-
-            <button class="product-btn"
-                onclick="showText(
-                'Simple Timer requires Windows 10/11 and Python installed.'
-                )">
-
-                Simple Timer
-
-            </button>
-
-            <button class="product-btn"
-                onclick="showText(
-                'Screen Recorder requires Python 3.8+, opencv-python, numpy, and mss installed. DOES NOT WORK ON WAYLAND IF USING LINUX.'
-                )">
-
-                Screen Recorder
-
-            </button>
-
-            <button class="product-btn"
-                onclick="showText(
-                'Work Tracker requires Python installed and a supported desktop operating system.'
-                )">
-
-                Work Tracker
-
-            </button>
-
-        `;
-
-    }
-
-    else if(selection === "gaming"){
-
-        buttonArea.innerHTML = `
-
-            <button class="product-btn"
-                onclick="showText(
-                'Vellum Game Visualization requires Ollama installed with Mistral and qwen2.5 models, along with Python.'
-                )">
-
-                Vellum Game Visualization
-
-            </button>
-
-        `;
-
-    }
-
-}
-
-/* ========================= */
-/* SHOW REQUIREMENTS */
-/* ========================= */
-
-function showText(message){
-
-    document.getElementById("TextArea").innerHTML = `
-
-        <div class="requirement-box">
-
-            ${message}
-
-        </div>
-
+  if(selection === "utility"){
+    buttonArea.innerHTML = `
+      <button class="product-btn" onclick="showText('Simple Timer requires Windows 10/11 and Python installed.')">Simple Timer</button>
+      <button class="product-btn" onclick="showText('Screen Recorder requires Python 3.8+, opencv-python, numpy, and mss installed. DOES NOT WORK ON WAYLAND IF USING LINUX.')">Screen Recorder</button>
+      <button class="product-btn" onclick="showText('Work Tracker requires Python installed and a supported desktop operating system.')">Work Tracker</button>
     `;
-
+  } else if(selection === "gaming"){
+    buttonArea.innerHTML = `
+      <button class="product-btn" onclick="showText('Vellum Game Visualization requires Ollama installed with Mistral and qwen2.5 models, along with Python.')">Vellum Game Visualization</button>
+    `;
+  }
 }
 
+/* SHOW REQUIREMENTS */
+function showText(message){
+  document.getElementById("TextArea").innerHTML = `
+    <div class="requirement-box">${message}</div>
+  `;
+}
 </script>
-
 </body>
 </html>
