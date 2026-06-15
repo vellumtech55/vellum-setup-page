@@ -113,7 +113,27 @@ nav{
   font-size:.92rem;
   font-weight:600;
 }
-
+  .main-btn{
+  display:inline-block;
+  margin-top:16px;
+  padding:11px 18px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+  font-size:.9rem;
+  cursor:pointer;
+  transition:.22s;
+  font-family:Inter,sans-serif;
+}
+.neon-btn{
+  background:transparent;
+  color:var(--blue);
+  border:1px solid var(--blue);
+}
+  .neon-btn:hover{
+  background:var(--blue);
+  color:#fff;
+}
 .tab-button:hover{
   transform:translateY(-2px);
   color:white;
@@ -280,19 +300,10 @@ footer{
 <section id="products" class="tab-content">
   <h2 class="section-title">Product Requirements</h2>
   <div class="card">
-    <p>Select a software category below to view setup requirements and supported platforms.</p>
-
-    <select id="actionSelector" onchange="toggleButtons()">
-      <option value="">Select a product type</option>
-      <optgroup label="Software Categories">
-        <option value="utility">Utility Software</option>
-        <option value="gaming">Gaming Software</option>
-      </optgroup>
-    </select>
-
-    <div id="buttonArea"></div>
-    <div id="TextArea"></div>
-  </div>
+    <h2>Dependencies</h2>
+    <p>This is the installer to install the python version Vellum products were built on</p>
+      <a class="main-btn neon-btn" href="https://vellumtech.gumroad.com/l/zroor" target="_blank">View Product </a>
+    </div>
 </section>
 
 <footer>
@@ -313,32 +324,6 @@ tabButtons.forEach(btn => {
   });
 });
 
-/* PRODUCT SWITCHER */
-function toggleButtons(){
-  const selection  = document.getElementById("actionSelector").value;
-  const buttonArea = document.getElementById("buttonArea");
-  document.getElementById("TextArea").innerHTML = "";
-  buttonArea.innerHTML = "";
-
-  if(selection === "utility"){
-    buttonArea.innerHTML = `
-      <button class="product-btn" onclick="showText('Simple Timer requires Windows 10/11 and Python installed.')">Simple Timer</button>
-      <button class="product-btn" onclick="showText('Screen Recorder requires Python 3.8+, opencv-python, numpy, and mss installed. DOES NOT WORK ON WAYLAND IF USING LINUX.')">Screen Recorder</button>
-      <button class="product-btn" onclick="showText('Work Tracker requires Python installed and a supported desktop operating system.')">Work Tracker</button>
-    `;
-  } else if(selection === "gaming"){
-    buttonArea.innerHTML = `
-      <button class="product-btn" onclick="showText('Vellum Game Visualization requires Ollama installed with Mistral and qwen2.5 models, along with Python.')">Vellum Game Visualization</button>
-    `;
-  }
-}
-
-/* SHOW REQUIREMENTS */
-function showText(message){
-  document.getElementById("TextArea").innerHTML = `
-    <div class="requirement-box">${message}</div>
-  `;
-}
 </script>
 </body>
 </html>
