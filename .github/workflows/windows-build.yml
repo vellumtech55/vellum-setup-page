@@ -78,9 +78,12 @@ jobs:
               }
           }
 
-          # Hidden imports for your own internal modules
-          # (add more here if your project has other local modules PyInstaller can't detect)
-          $hiddenImports = @("launcher", "core")
+          # Hidden imports for your own internal modules.
+          # NOTE: main.py -> app.py -> (main_window, settings, ffmpeg_manager,
+          # hotkeys) is a static import chain, so PyInstaller's analysis finds
+          # these automatically - no --hidden-import needed for them. Only add
+          # entries here for modules loaded dynamically (importlib, plugins).
+          $hiddenImports = @()
           foreach ($mod in $hiddenImports) {
               $pyArgs += "--hidden-import"
               $pyArgs += $mod
@@ -94,6 +97,20 @@ jobs:
           # Use splatting (@pyArgs), NOT Invoke-Expression on a joined string -
           # splatting preserves each argument exactly, including paths with spaces
           & pyinstaller @pyArgs
+
+      - name: Bundle ffmpeg folder next to exe
+        shell: powershell
+        run: |
+          # config.py resolves FFMPEG_FOLDER as <exe_dir>/ffmpeg at runtime,
+          # so ffmpeg.exe needs to physically sit next to the built exe in
+          # dist/ - NOT embedded inside the onefile bundle, since that temp
+          # extraction folder is wiped after every run.
+          if (Test-Path "ffmpeg") {
+              Copy-Item -Recurse -Force "ffmpeg" "dist/ffmpeg"
+              Write-Host "Copied ffmpeg/ folder into dist/"
+          } else {
+              Write-Host "No ffmpeg/ folder found in repo - skipping (app will fall back to system PATH ffmpeg)"
+          }
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
