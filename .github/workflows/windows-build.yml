@@ -11,25 +11,51 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout project
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install dependencies
+        shell: powershell
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller
+
+          pip install pyinstaller customtkinter pillow
+
           if (Test-Path requirements.txt) {
               pip install -r requirements.txt
           }
 
-      - name: Build
+      - name: Find main.py
+        shell: powershell
         run: |
-          pyinstaller --onefile --windowed main.py
+          $main = Get-ChildItem -Recurse -Filter main.py | Select-Object -First 1
 
-      - name: Upload
+          if ($null -eq $main) {
+              Write-Error "No main.py found!"
+              exit 1
+          }
+
+          echo "MAIN_FILE=$($main.FullName)" >> $env:GITHUB_ENV
+          Write-Host "Found: $($main.FullName)"
+
+      - name: Build EXE
+        shell: powershell
+        run: |
+          pyinstaller `
+          --onefile `
+          --windowed `
+          --collect-all customtkinter `
+          --collect-all PIL `
+          --hidden-import launcher `
+          --hidden-import core `
+          "$env:MAIN_FILE"
+
+      - name: Upload EXE
         uses: actions/upload-artifact@v4
         with:
           name: Windows-EXE
