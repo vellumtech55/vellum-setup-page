@@ -175,22 +175,18 @@ class Recorder:
         self.output_file = self.build_output_path()
         cmd = self.build_command()
 
-        # On Windows, ffmpeg needs to be in its own process group so we can
-        # later send it CTRL_BREAK_EVENT (the closest equivalent to SIGINT)
-        # instead of hard-killing it. Without this flag there is no way to
-        # ask ffmpeg to finalize the file cleanly - taskkill /F terminates
-        # it mid-write, corrupting the recording.
-        creationflags = 0
-        if platform.system() == "Windows":
-            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
-
+        # On Windows this app runs windowed (no console - see main.py), so
+        # GenerateConsoleCtrlEvent has no console to route through and
+        # raises "[WinError 6] The handle is invalid" if we try to signal
+        # the child. We stop ffmpeg via its stdin 'q' command instead (see
+        # stop()), which works regardless of whether we have a console, so
+        # no special creationflags are needed here.
         try:
             self.process = subprocess.Popen(
                 cmd,
-                stdin=subprocess.DEVNULL,   # don't use stdin; we stop via signal
+                stdin=subprocess.PIPE,      # used to send 'q' for a clean stop
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.PIPE,     # capture for error reporting
-                creationflags=creationflags,
             )
         except Exception as e:
             self.process = None
@@ -217,19 +213,22 @@ class Recorder:
             # valid index/moov atom - the file is left corrupted even
             # though the app reports success.
             if platform.system() == "Windows":
-                # CTRL_BREAK_EVENT is Windows' closest equivalent to SIGINT
-                # for a subprocess. Requires the process to have been
-                # started with CREATE_NEW_PROCESS_GROUP (see start()).
-                self.process.send_signal(signal.CTRL_BREAK_EVENT)
+                # No console is available to send CTRL_BREAK_EVENT through
+                # (this app runs windowed), so use ffmpeg's own graceful-quit
+                # keystroke on stdin instead - works with no console needed.
+                try:
+                    self.process.stdin.write(b"q")
+                    self.process.stdin.flush()
+                except (OSError, ValueError):
+                    pass  # pipe already closed - fall through to communicate()
             else:
                 self.process.send_signal(signal.SIGINT)
 
             _, stderr_bytes = self.process.communicate(timeout=10)
 
-            # 255 / -2 are normal ffmpeg exit codes after SIGINT on
-            # POSIX; Windows returns 0 (sometimes 3221225786, the
-            # STATUS_CONTROL_C_EXIT code) after a clean CTRL_BREAK_EVENT.
-            if self.process.returncode not in (0, 255, -2, 3221225786):
+            # 255 / -2 are normal ffmpeg exit codes after SIGINT on POSIX;
+            # Windows returns 0 after a clean 'q' stdin quit.
+            if self.process.returncode not in (0, 255, -2):
                 self.last_error = stderr_bytes.decode(errors="replace").strip()
 
         except subprocess.TimeoutExpired:
